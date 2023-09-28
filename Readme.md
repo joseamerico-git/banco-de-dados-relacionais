@@ -123,7 +123,60 @@ A cardinalidade de usuarios para reservas é 1..n, porém a cardinalidade de res
 
              Nenhuma ou mais [reservas]0..n______<vicula>______ 1..1 [destino]
 
-[Interessante](https://www.quickdatabasediagrams.com/)
+[Interessante](https://www.quickdatabasediagrams.com/) Denenhando projetos on-line.
+
+Configuração do cloudclusters
+Criar um usuário
+adm
+permission --super
+senha padrão --> Mariadb
+
+
+As tabelas servem para organizar os dados
+As colunas representam atributos de acordo com o tipo de dado que é definido no momento da criação (DDL).
+Os registros são as informações aramazenadas nas linhas dessa tabela.
+
+# COMANDOS DDL
+
+CREATE TABLE {{NOMETABELA}} 
+    (
+        {{COLUNA}} {{TIPO}} COMMENT
+        {{'COMENTARIO'}}
+
+
+    );
+
+# TIPOS PODEM VARIAR DEPENDENDO DO SGBD
+
+INTEGER | DECIMAL | NUMERIC | CHARACTER | VARCHAR | DATA | BOOLEAN | TEXT
+OPÇÕES RESTRIÇÕES DE VALORES 
+NOT NULL| UNIQUE | DEFAULT
+PRIMARY KEY | FOREIGN KEY | AUTO_INCREMENT
+
+[PhpMyAdmin](https://phpmyadmin-c013.cloudclusters.net/index.php)
+
+SCRIPTS
+```
+
+CREATE TABLE usuarioas )
+    id INT,
+    nome VARCHAR(255) NOT NULL COMMENT 'Nome do usuário',
+    email VARCHAR(100) UNIQUE NOT NULL COMMENT 'Email do usuário'
+    data_nascimento DATE NOT NULL COMMENT 'Data de nascimento do usuário',
+    endereco VARCHAR(255) NOT NULL COMMENT 'Endereço do usuário'
+
+    );
+
+CREATE TABLE viagens.destinos (
+    id INT,
+    nome VARCHAR(255) NOT NULL UNIQUE COMMENT 'Nome do destino',
+    descricao VARCHAR(255) NOT NULL COMMENT 'Descricao do destino'
+        
+    );
+
+
+
+```
 
 
 
