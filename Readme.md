@@ -95,6 +95,38 @@ Ex:
 
 Entidade usuario tem atributos --> nome, email, senha...
 
+Abaixo um link para poder criar alguns diagramas.
+@@ Guia anónima ------>> 123
+[Creately](https://creately.com/pt/home/)
+
+# Criamos um diagrama vazio
+
+Criamos três entidades Usuario, Destinos e Reservas
+
+Usuarios com id, nome, dataNascimento etc...
+
+# Existem duas maneiras de representar os atributos em diagramas a conotação utilizaraemos então a conotação tradicional elipse, porém o diagrama fica um pouco poluido visualmente
+
+# Relacionamentos 
+
+1..1 (um para um) --> uma instância de uma entidade pode estar relacionado no máximo a uma instância de uma outra entidade 
+
+1..n ou 1..* (um para muitos) uma instância de entidade pode estar relacionada a uma ou muitas instâncias de uma outra entidade
+
+n..n ou *..* (muitos para muitos) muitas instâncias de uma entidade podem estar relacionadas a muitas instâncias de uma outra entidade.
+
+No exemplo de usuário e reserva temos que:
+
+A cardinalidade de usuarios para reservas é 1..n, porém a cardinalidade de reservas para usuários é 1..1.
+
+             Um [usuário] 1..1 ______<realiza>______0..n [reservas]
+
+             Nenhuma ou mais [reservas]0..n______<vicula>______ 1..1 [destino]
+
+[Interessante](https://www.quickdatabasediagrams.com/)
+
+
+
 
 
 
