@@ -2,6 +2,15 @@
 Santander BootCamp: 
 Instrutora: Pâmela Apolinário Borges
 
+# Resumo de Estudos pessoais. By José Américo.
+
+```
+    # Criando um database
+    CREATE DATABASE NOMEDB;
+    USE NOMEDB;
+
+```
+
 # Introdução 
 
 É uma coleção organizada de dados
@@ -158,27 +167,138 @@ PRIMARY KEY | FOREIGN KEY | AUTO_INCREMENT
 SCRIPTS
 ```
 
-CREATE TABLE usuarioas )
+CREATE TABLE usuarioas (
     id INT,
     nome VARCHAR(255) NOT NULL COMMENT 'Nome do usuário',
-    email VARCHAR(100) UNIQUE NOT NULL COMMENT 'Email do usuário'
+    email VARCHAR(100) UNIQUE NOT NULL COMMENT 'Email do usuário',
     data_nascimento DATE NOT NULL COMMENT 'Data de nascimento do usuário',
     endereco VARCHAR(255) NOT NULL COMMENT 'Endereço do usuário'
 
-    );
+);
 
 CREATE TABLE viagens.destinos (
     id INT,
     nome VARCHAR(255) NOT NULL UNIQUE COMMENT 'Nome do destino',
     descricao VARCHAR(255) NOT NULL COMMENT 'Descricao do destino'
         
-    );
+);
+
+CREATE TABLE viagens.reservas (
+ id INT COMMENT 'Identificador único da reserva',
+ id_usuario INT COMMENT 'Referência ao ID usuário que faz a reserva',
+ id_destino INT COMMENT 'Referência ao ID destino na reserva',
+ data DATE  COMMENT 'Data da reserva',
+ status VARCHAR(255) DEFAULT 'pendente' COMMENT 'Status da reserva (confirmada, pendente, cancelada, etc...)'
+
+
+);
+
+```
+# DML(S)
+
+# INSERT
+
+```
+insert into USUARIOS (id,nome,email,data_nascimento,endereco) 
+values (1,'JOÃO PEDRO','jp@gmail.com','2019-11-25','XV DE NOVEMBRO, 5000 ASSIS/SP');
+
+insert into USUARIOS (id,nome,email,data_nascimento,endereco) 
+values (2,'JUNIHO','jr@gmail.com','2000-11-25','XV DE NOVEMBRO, 5000 ASSIS/SP');
+
+insert into USUARIOS (id,nome,email,data_nascimento,endereco) 
+values (3,'SEBASTIÃO','sb@gmail.com','1998-11-25','XV DE NOVEMBRO, 5000 ASSIS/SP');
+
+insert into destinos (id,nome, descricao) 
+values 
+(1,"Praia do Tenôrio de Ubatuba","Maravilhosa praia para suas férias");
+
+insert into destinos (id,nome, descricao) 
+values 
+(3,"Praia Asturias","Maravilhosa praia para suas férias"),
+(4,"Praia deserta","Maravilhosa praia para suas férias");
+
+
+insert into reservas (id,id_destino,id_usuario,status,data) values (1,1,1,'pendente','2023-09-28');
+
+insert into reservas (id,id_destino,id_usuario,status,data) values (2,1,2,'concluido','2023-09-28');
+
+insert into reservas (id,id_destino,id_usuario,status,data) values (3,2,2,'concluido','2023-09-28');
+
+insert into reservas (id,id_destino,id_usuario,status,data) values (4,2,3,'concluido','2023-09-28');
+
+```
+
+# SELECT 
+
+Observação com o Like pegamos também padrões exemplo sem precisar clausula where select *from reservas where status like 'concluido';
+```
+    # SELECT *FROM USUARIOS;
+    # SELECT *FROM USUARIOS ORDER BY nome;
+    # SELECT *FROM USUARIOS WHERE id = 1;
+    # SELECT *FROM USUARIOS WHERE data_nascimento between '2019-11-25' and '2023-09-28';
+
+```
+
+# UPDATE
+
+```
+    UPDATE USUARIOS SET NOME = 'SEBASTIAO DA SILVA' WHERE USUARIOS.ID = 3;
+    UPDATE USUARIOS SET NOME = 'SEBASTIAO DA SILVA', email ='sbsilva@gmail.com' WHERE USUARIOS.ID = 3;
+
+
+```
+
+# DELETE 
+
+```
+    DELETE FROM USUARIOS WHERE ID =2;
+```
+
+A clausula where funciona com um filtro para a consulta seguida das (condições)
+
+# ALTERANDO AS TABELAS PARA CORRIGIR A FALTA DE RELACIONAMENTOS
+# COMANDOS DDL
+
+```
+    # Alterando nome da tabela
+    ALTER TABLE usuarioas_nova RENAME usuarios; 
+
+```
+
+# RECRIANDO UMA TABELA PARA MIGRAR DADOS DE UMA TABELA A SER ALTERADA.
+
+```
+CREATE TABLE usuarioas_nova (
+    id INT,
+    nome VARCHAR(255) NOT NULL COMMENT 'Nome do usuário',
+    email VARCHAR(100) UNIQUE NOT NULL COMMENT 'Email do usuário',
+    data_nascimento DATE NOT NULL COMMENT 'Data de nascimento do usuário',
+    endereco VARCHAR(255) NOT NULL COMMENT 'Endereço do usuário'
+
+);
+
+# Migrando os dados de uma table utilizando um DUMP, porem vamos fazer de outra # forma.
+
+# Migrando os dados
+
+INSERT INTO usuarios_nova (id,nome,email,endereco,data_nascimento)
+SELECT id,nome,email,endereco,data_nascimento from usuarios;
+
+
+drop table usuarios;
+
+
 
 
 
 ```
 
+# EXLUINDO TABELAS
 
+```
+  DROP TABLE NOMETABELA  
+
+```
 
 
 
