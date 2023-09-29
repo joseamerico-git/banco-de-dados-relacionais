@@ -261,7 +261,12 @@ A clausula where funciona com um filtro para a consulta seguida das (condições
 
 ```
     # Alterando nome da tabela
+   
     ALTER TABLE usuarioas_nova RENAME usuarios; 
+
+    # Alterando coluna de uma tabela
+
+    ALTER TABLE usuarios MODIFY COLUMN endereco VARCHAR(150);
 
 ```
 
@@ -288,9 +293,6 @@ SELECT id,nome,email,endereco,data_nascimento from usuarios;
 drop table usuarios;
 
 
-
-
-
 ```
 
 # EXLUINDO TABELAS
@@ -299,6 +301,120 @@ drop table usuarios;
   DROP TABLE NOMETABELA  
 
 ```
+
+# CHAVES PRIMARIAS E ESTRANGEIRAS
+ATRIBUTO OU CONJUNTO DE ATRIBUTOS QUE IDENTIFICAM DE FORMA EXCLUSIVA CADA REGISTRO DE NOSSAS TABELAS.
+
+# PRIMARY KEY
+
+A CHAVE PRIMARIA:IDENTIFICAÇÃO EXCLUSIVA.
+Cada tabela pode possuir apenas uma chave primaria.
+
+ É RESPONSÁVEL POR GARANTIR A INTEGRIDADE DE NOSSOS DADOS, IMPEDINDO A CRIAÇÃO DE REGISTROS DUPLICADOS E TAMBÉM A RECUPERAR OS REGISTROS.
+
+ A chave primária (PRIMARY KEY) Pode definida durante a criação das tabelas
+
+ ```
+  CREATE TABLE MINHATABELA (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    #DEMAIS ATRIBUTOS 
+  );
+ 
+ 
+ ``` 
+
+ # PODEMOS ADICIONAR TAMBÉM APÓS A CRIAÇÃO DAS TABELAS
+ # AUTOINCREMENT ATRIBUI AUTOMATICAMENTE VALORES QUANDO FAZEMOS UM ISERT.
+
+ ```
+    ALTER TABLE MINHATABELA 
+    MODIFY COLUMN ID INT PRIMARY KEY;
+ 
+ ```
+
+# NULL 
+O campo não pode ser nulo
+
+# FOREIGN KEY
+
+A chave estrangeira é utilizada para manter a integridade dos dados entre as tabelas pode ser nula 
+é possível ter mais de uma ou nenhuma em cada tabela.
+
+Pode ser cridada durante a criação da tabela
+
+```
+    CREATE TABLE MINHATABELA(
+        ID INT PRIMARY KEY,
+        ID_OUTRATABELA INT,
+        FOREIGN KEY (ID_OUTRATABELA) REFERENCES OUTRATABELA (ID)
+    );
+
+```
+
+Ou alterar uma tabela já criada adicionando a constraint foreign key
+
+```
+    ALTER TABLE MINHATABELA
+                    #nome da constraint
+    ADD CONSTRAINT MINHATABELA_OUTRATABELA_FK 
+    FOREIGN KEY (ID)
+    REFERENCES OUTRATABELA(ID)
+
+```
+
+# Restrições de FK
+
+ON DELETE --> Especifíca o que acontece com os registros pendentes quando um registro pai é excluido.
+
+
+ON UPDATE --> Define o comportamento dos registros dependente quando o registro pai é atualizado
+
+CASCADE, SET NULL, SET DEFAULT E RESTRICT -->
+
+CASCADE     --> REPLICA A ALTERAÇÃO DO PAI NOS FILHOS
+SET NULL    --> REMOVE A INTEGRIDADE REFERÊNCIAL 
+SET DEFAULT --> SETA UM VALOR DEFAULT PARA OS REGISTROS QUE FICARAM SEM UM PAI
+RESTRICT    --> IMPEDE QUE OCORRA A EXCLUSÃO OU ATUALIZAÇÃO DE UM REGISTRO DA TABELA PAI, CASO AINDA HAJAM REGISTROS NA TABELA FILHA. 
+
+
+# ALTERANDO NOSSAS TABELAS CRIADAS USUARIOS, RESERVAS E DESTINOS
+
+```
+    # ADICIONANDO PK EM USUARIOS
+
+       ALTER TABLE usuarios 
+       MODIFY COLUMN id INT AUTO_INCREMENT,
+       ADD PRIMARY KEY (id);
+
+       ALTER TABLE destinos 
+       MODIFY COLUMN id INT AUTO_INCREMENT,
+       ADD PRIMARY KEY (id);
+
+       ALTER TABLE reservas 
+       MODIFY COLUMN id INT AUTO_INCREMENT,
+       ADD PRIMARY KEY (id);
+
+       ALTER TABLE reservas ADD CONSTRAINT fk_usuarios FOREIGN KEY (id_usuario) REFERENCES usuarios (id) ;
+
+        ALTER TABLE reservas ADD CONSTRAINT fk_destinos FOREIGN KEY (id_destino) REFERENCES usuarios (id) 
+        ON DELETE CASCADE 
+
+        # TOMAR CUIDADO COM O ON DELETE CASCADE.
+       
+       
+       usuario (id),
+       ADD CONSTRAINT reservas_destino_fk foreign key (id_destino) destino(id);
+
+       
+```
+
+
+# NORMALIZAÇÃO DE DADOS 
+
+A normalização de dados é um prcesso no qual organizamos a estrutura de um banco de dados relacional de maneira a eliminar redundâncias e anomalias, garantindo a concistência e integridade dos dados.
+
+No exemplo em nossa tabela de usuários vimos que o endereço ficou um campo de texto livre, isso não garante a padronização desses dados e ficaria difícil extrair informações tais como bairro, cidade endereço etc..
+
 
 
 
