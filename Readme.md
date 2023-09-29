@@ -415,6 +415,184 @@ A normalização de dados é um prcesso no qual organizamos a estrutura de um ba
 
 No exemplo em nossa tabela de usuários vimos que o endereço ficou um campo de texto livre, isso não garante a padronização desses dados e ficaria difícil extrair informações tais como bairro, cidade endereço etc..
 
+# A NORMALIZAÇÃO DE DADOS DEVERÁ OCORRER DURANTE A MODELAGEM DO BANCO DE DADOS OU SEJA DEVE SER MINUNCIOSAMENTE OBSERVADO E CALCULADO PARA GARANTIR QUE NOSSO BANCO DE DADOS FUNCIONE DE MANEIRA SUSTENTAVEL.
+
+# FORMAS NORMAIS (1FN:)
+
+A Primeira forma normal 
+
+1FN: ATOMICIDADE DE DADOS
+
+Estabelece sobre a atomicidade de dados que cada valor em uma tabela deve ser indivisível. Nenhum capo deve conter multiplos valores ou listas. 
+No caso do endereço de nossos usuarios isso ocorreu com clareza
+
+O ideal seria criar uma tabela para endereço ou criar camos separados para cada informação. 
+
+Existem várias normas essa 1FN é uma delas: 
+
+Estudar as FORMAS NORMAIS...
+
+```
+    ALTER TABLE usuarios 
+    ADD rua VARCHAR(100),
+    ADD numero VARCHAR(10),
+    ADD CIDADE VARCHAR(50),
+    ADD ESTADO VARCHAR(20);
+
+    # Faz um substring na coluna endereço 
+    ex: Rua Xv de Novembro, 500, Assis/SP pegando cada valor após a vírgula.
+
+    UPDATE usuarios
+    SET rua = SUBSTRING_INDEX(SUBSTRING_INDEX(endereco,',',1),',',-1),
+    numero =  SUBSTRING_INDEX(SUBSTRING_INDEX(endereco,',',2),',',-1),
+    cidade =  SUBSTRING_INDEX(SUBSTRING_INDEX(endereco,',',3),',',-1),
+    estado = SUBSTRING_INDEX
+    (endereco,',',-1);
+
+    ALTER TABLE usuarios
+    DROP COLUMN endereco;
+```
+# SEGUNDA FORMA NORMAL (2FN:)
+
+2FN: 
+Para poder aplicar a segunda froma normal, temos como pré requisito a 1FN já implementada.
+
+Todos os atributos não chave devem depender totalmente da chave primária.
+
+# Se sua tabela tem uma chave primária simples não existe a possibilidade de termos depêndencia parcial e por tanto ela já está na 2FN.
+
+"Segunda Forma Normal (2FN):
+
+Uma tabela encontra-se na segunda forma normal se ela atende todos os requisitos da primeira forma normal e se os registros na tabela, que não são chaves, dependam da chave primária em sua totalidade e não apenas parte dela.20 de dez. de 2022"
+
+[fonte](https://www.google.com/search?q=2+forma+normal+banco+de+dados&oq=2+FORMA+NORMAL+B&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIKCAIQABgKGBYYHtIBCDUyMzhqMGo0qAIAsAIA&sourceid=chrome&ie=UTF-8)
+
+
+Como testar a 2FN 
+
+Expandir a tabela preencher e observar alguns dados, 
+
+![Alt text](image.png)
+
+Verificar coluna por coluna local_fornecedor depende do código do fornecedor
+Qtde_estoque depende do código da peça
+só do código da peça ou do forncedor?
+tel_forncedor depende do código da peça?
+qtde_caixas depende da qtde_estoque
+
+# Tabela normalizada ex:
+
+![Alt text](image-1.png)
+
+Retiramos os atributos que não dependem da pk da tabela peças
+
+e colocamos em outra tabela tbl_fornecedor
+
+A quantidade de caixas poderiam ser eliminadas e fazer um campo calculado
+
+Elimanmos então as depêndencias parciais.
+
+# TERCEIRA FORMA NORMAL (3FN:)
+
+Uma tabela tem que estar de acordo com a 2FN.
+Nenhuma coluna não chave depender de outra coluna não chave
+
+Ex: Relação de Estado -> Cidade
+
+Todos atributos devem depender somente do id
+
+É preciso ter um bom senso na hora de normalizar as nossas tabelas caso a cidade e estado fossem de extrema importância para a aplicação seria cabibel aplicar a terceira forma normal, porém em nossos exemplos para manter a simplicidade, não foi necessário aplicar.
+
+Resumo 
+
+1FN --> GARANTE QUE CADA VALOR SEJA ATÔMICO E QUE OS REGISTROS SEJAM ÚNICOS
+
+2FN --> GARANTE QUE OS ATRIBUTOS NÃO CHAVE DEPENDAM TOTALMENTE DA CHAVE PRIMÁRIA
+
+3FN --> ELIMINA DEPENDÊNCIAS TRANSITIVAS ENTRE OS ATRIBUTOS NÃO CHAVE, GARANTINDO QUE CADA ATRIBUTO NÃO CHAVE DEPENDA APENAS DA CHAVE PRIMÁRIA, NÃO HAVENDO DEPENDENCIAS INDIRETAS ENTRE ELAS.
+
+# INNER JOIN
+Retorna apenas as linhas que têm correspondência em ambas as tabelas envolvidas na junção. A Junção é feita com base em uma condição de igualdade especificada na cláusula ON.
+
+```
+    SELECT *FROM TABELA1
+    INNER JOIN TABELA2 ON TABELA1.COLUNA = TABELA2.COLUNA;
+
+    # NO EXEMPLO DU USUÁRIO
+    # SE ELE TIVER UMA RESERVA VAI RETORNAR CASO CONTRÁRIO NÃO RETORNARÁ.
+
+    SELECT *FROM usuarios 
+    INNER JOIN reservas ON usuarios.id = usuarios.id;
+
+    # UTILIZANDO ALIAS PARA ENCURTAR OS NOMES
+
+    SELECT *FROM usuarios us
+    INNER JOIN reservas rs ON us.id = rs.id_usuario
+    INNER JOIN destinos ds ON rs.id_destino = ds.id;
+
+    SELECT *FROM usuarios us
+    LEFT JOIN reservas rs ON us.id = rs.id_usuario
+
+
+```
+
+![Alt text](image-2.png)
+
+INNER JOIN --> DADOS COMUNS ENTRE AS TABELAS
+
+
+# LEFT JOIN AGREGA TODAS AS INFOMAÇÕES
+
+Retorna todas as tabelas da esquerda e todas as que encontrar da direita, caso não sejam todos relacionados retorna alguns campos null(s).
+
+# RIGHT JOIN
+
+Retorna todas as tabelas da direita e todas que encontrar da esquerda. O contrário do LEFT JOIN.
+
+INSERT INTO DESTINOS (NOME,DESCRICAO) VALUES("DESTINO SEM RESERVA","descricao");
+
+```
+    SELECT *FROM reservas rs 
+    RIGHT JOIN destinos ds 
+    ON rs.id = ds.id_reserva; 
+```
+
+
+# FULL JOIN
+
+Retorna todas as linhas de ambas as tabelas envolvidas na junção, combinando-as com base em uma condição de igualdade. Se não houver correspondência, os valores ausentes serão null
+
+```
+    SELECT 
+    *FROM usuarios us
+    FULL JOIN reservas rs ON rs.id_usuario = us.id;
+```
+
+# SUB CONSULTAS
+
+Permitem realizar consultas mais complexa que voê use o resultado como entrada para outra consulta.
+
+UTILIZADA EM 
+
+SELECT, FROM, WHERE, HAVING E JOIN.
+
+```
+    # Buscando os destinos sem reservas utilizando uma sub consulta.
+
+    SELECT *FROM destinos where id NOT IN (SELECT id_destino FROM reservas );
+    
+    # Buscando os usuarios sem reservas utilizando uma sub consulta.
+
+    SELECT *FROM usuarios where id NOT IN (SELECT id_usuario FROM reservas );
+
+    SELECT nome, (SELECT COUNT(*) FROM reservas WHERE id_usuario = usuarios.id) as total_reservas FROM usuarios;
+
+```
+
+
+
+
+
 
 
 
