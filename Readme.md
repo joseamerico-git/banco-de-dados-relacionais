@@ -588,6 +588,114 @@ SELECT, FROM, WHERE, HAVING E JOIN.
     SELECT nome, (SELECT COUNT(*) FROM reservas WHERE id_usuario = usuarios.id) as total_reservas FROM usuarios;
 
 ```
+# FUNÇÕES AGREAGADAS OU AGREGADORAS
+
+COUNT -> CONTA OS NÚMEROS DE REGISTROS
+
+SUM   -> SOMA OS VALORES DE UMA COLUNA NUMÉRICA
+
+AVG   -> CALCULA MÉDIA DOS VALORES DE UMA COLUNA NUMÉRICA
+
+MIN   -> RETORNA O VALOR MÍNIMO DE UMA COLUNA (PODE SER DATA)
+
+MAX   -> RETORNA O VALOR MÁXIMO DE UMA COLUNA (PODE SER DATA)
+
+
+```
+   SELECT COUNT(*) usuarios
+
+                    #alias nomeando a coluna do resultado                                
+   SELECT COUNT(*) as total_usuarios FROM usuarios;
+
+    #ou utilizando o INNER JOIN
+
+   # Todos os usuários que estão relacionados com reservas utilizando INNER JOIN ON 
+   SELECT COUNT(*) as total_usuarios FROM usuarios us INNER JOIN reservas rs ON us.id = rs.id_usuario
+
+   # Pegando a maior idade
+   SELECT MAX(TIMESTAMPDIFF(YEAR,data_nascimento,CURRENT_DATE())) as maior_idade FROM usuarios;
+
+   # AGRUPAMENTOS DE CONSULTAS
+
+   SELECT *FROM RESERVAS;
+   # Para visualizar o teste adicionaremos mais de um destino para um mesmo usuário com destinos diferentes.
+
+   INSERT INTO reservas (data,id_destino,id_usuario,status) VALUES(CURRENT_DATE,4,1,'agendado');
+
+   # Queremos saber quantas reservas para cada destino
+   
+   # AGRUPANDO RESULTADOS
+   SELECT COUNT(*) FROM reservas GROUP BY id_destino;
+
+    # AGRUPANDO RESULTADOS
+   SELECT COUNT(*), id_destino FROM reservas GROUP BY id_destino;
+
+    # ORDENAÇÃO DE RESULTADOS
+
+    SELECT *FROM usuarios ORDER BY nome;
+
+    # ORDENANDO DE FORMA ASCENDENTE 
+
+    SELECT COUNT(*) AS qtd_reserva, id_destino FROM reservas GROUP BY id_destino;
+    
+    # AGRUPANDO E ORDENANDO RESULTADOS
+    # POR PADRÃO PEGA ORDEM ASCENDENTE
+
+    SELECT COUNT(*) AS qtd_reserva, id_destino FROM reservas GROUP BY id_destino ORDER BY qtd_reserva;
+
+    UTILIZANDO O DESC PEGA A ORDEM DESCENDENTE
+
+    SELECT COUNT(*) AS qtd_reserva, id_destino FROM reservas GROUP BY id_destino ORDER BY qtd_reserva DESC;
+     
+     # ORENANDO MAIS DE UMA COLUNA RETORNA RESULTADO NA ORDEM DA PASSAGEM DAS VARIÁVEIS
+     SELECT COUNT(*) AS qtd_reserva, id_destino FROM reservas GROUP BY 
+     id_destino ORDER BY qtd_reserva DESC, id_destino DESC;
+                            #variável       # variável
+
+
+```
+
+# ÍNDICES
+
+Consultas avançadas - índices de busca
+
+# Análise de Plano de Execução.
+
+Permite examinar as operações realizadas, as tabelas acessadas, os índices utilizados e outras informações importantes para identificar possíveis melhorias de desempenho.
+
+EXPLAIN 
+    SELECT *
+    FROM TABELA
+
+select_type: "SIMPLE", "SUBQUERY", "JOIN", table.
+
+type: "ALL", "INDEX" entre outros 
+
+possíble_keys: Os índices possíves que podem ser utilizados na operação.
+
+key: O índice utilizado na operação, se aplicável
+
+key_len: O comprimento do índice utilizado
+
+ref: As colunas ou constantes usadas para acessar o índice 
+rows 
+
+Exemplos:
+
+```
+    
+     EXPLAIN SELECT *FROM usuarios where email ="ZE@ZE";
+
+    # Criando um índice para otimização de consultas aumentando a performance.
+    
+    # Simples ou composta de acordo com a quantidade de parâmetros.
+     CREATE INDEX idx_nome ON usuarios (nome);
+
+     EXPLAIN SELECT *FROM usuarios where email ="ZE@ZE";
+
+
+```
+
 
 
 
